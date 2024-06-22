@@ -1,8 +1,9 @@
+
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -12,6 +13,7 @@ const bookings = [];
 io.on("connection", socket => {
   console.log("a user connected");
 
+  // Send "Good Morning" message and menu to the client on connection
   socket.emit("chat message", "Good Morning! Welcome to the Gas Cylinder Booking System. Enter 1 to book, 2 to cancel, 3 for menu.");
 
   socket.on("chat message", msg => {
@@ -43,6 +45,7 @@ io.on("connection", socket => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
+    // Optionally, handle cleanup if a user disconnects without canceling a booking
     const index = bookings.indexOf(socket.id);
     if (index > -1) {
       bookings.splice(index, 1);
